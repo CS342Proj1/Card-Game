@@ -29,7 +29,7 @@ public class Card
     public @Override String toString()
         {
 
-              return ranks[rank] + " of " + suits[suit];
+              return ranks[rank] + suits[suit];
         }
 
  

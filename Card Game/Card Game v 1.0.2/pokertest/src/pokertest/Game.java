@@ -45,6 +45,7 @@ public class Game {
 	   dealCards(players, numOfComputerPlayer + 1, deck);
 	   printHand(player1);
 	   printHand(player3);
+	   System.out.println("Has Ace: " + checkAce(player1));
 	   
 	}
 	
@@ -63,8 +64,6 @@ public class Game {
 			{
 				p = players.get(i);
 				C = deck.drawFromDeck();
-				//System.out.println("player"+i+": ");
-				//System.out.println(C.toString());
 				((player) p).getHandCards().add(C);
 			}
 		}
@@ -74,16 +73,33 @@ public class Game {
 	
 	static void printHand(player p)
 	{
-		System.out.println("Hand: ");
-		//Card C;
+		
+		System.out.print("The cards in your hand are: ");
+		int i = 1;
+		
 		for(Card C : p.getHandCards())
 		{	
-			//C = p.handCards;
-			System.out.println(C.toString());
+			System.out.print(i + ") ");
+			System.out.print(C.toString() + " ");
+			i++;
 		}
+		System.out.println();
 	}
 	
-
+	static boolean checkAce(player p)
+	{
+		ArrayList<Card> evalHand = ((player) p).getHandCards();
+		
+		for(Card C : evalHand)
+		{
+			if(C.getRank() == 12)
+			{
+				return true;
+			}
+		}
+		return false;
+		
+	}
 	
 
 }
