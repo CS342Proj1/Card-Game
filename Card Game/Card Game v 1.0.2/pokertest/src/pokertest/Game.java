@@ -38,8 +38,8 @@ public class Game {
 	   OpponentPlayer player3 = new OpponentPlayer();
 	   OpponentPlayer player4 = new OpponentPlayer();
 	   
-	   Card c1 = new Card(0,1);
-	   Card c2 = new Card(0,3);
+	   Card c1 = new Card(0,0);
+	   Card c2 = new Card(0,0);
 	   Card c3 = new Card(1,3);
 	   Card c4 = new Card(2,3);
 	   Card c5 = new Card(3,3);
@@ -64,10 +64,16 @@ public class Game {
 	//   System.out.println("Has Ace: " + checkAce(player1));
 	//   HandEval(player1);
 	   
-	   testPlayer.printHand();
-	   System.out.println("Has Ace: " + checkAce(testPlayer));
-	   HandEval(testPlayer);
+	//   testPlayer.printHand();
+	//   System.out.println("Has Ace: " + checkAce(testPlayer));
+	//   HandEval(testPlayer);
 	   
+	}
+	
+	
+	void gamePlay(ArrayList<player> players)
+	{
+		
 	}
 	
 	

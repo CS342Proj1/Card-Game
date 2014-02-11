@@ -15,7 +15,8 @@ public class player {
 	private int fullHouse;
 	private int fourKind;
 	private int straightFlush;
-
+	
+	
 	
 
 	public ArrayList<Card> getHandCards() {
@@ -97,6 +98,8 @@ public class player {
 	public void setTwoPair(int twoPair) {
 		this.twoPair = twoPair;
 	}
+
+	
 	
 
 }
