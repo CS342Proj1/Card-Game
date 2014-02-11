@@ -5,6 +5,8 @@ import java.util.Collections;
 
 public class player {
 	private ArrayList<Card> handCards = new ArrayList<Card>();
+	private ArrayList<Integer> score = new ArrayList<Integer>();
+	private int topScore;
 	
 	private int highCard;
 	private int pair;
@@ -15,6 +17,20 @@ public class player {
 	private int fullHouse;
 	private int fourKind;
 	private int straightFlush;
+	
+	
+	void setAllZero() //Reset hand after discarding cards, for safety
+	{
+		setHighCard(0);
+		setPair(0);
+		setTwoPair(0);
+		setThreeKind(0);
+		setStraight(0);
+		setFlush(0);
+		setFullHouse(0);
+		setFourKind(0);
+		setStraightFlush(0);
+	}
 	
 	
 	
@@ -97,6 +113,34 @@ public class player {
 
 	public void setTwoPair(int twoPair) {
 		this.twoPair = twoPair;
+	}
+
+
+
+
+	public ArrayList<Integer> getScore() {
+		return score;
+	}
+
+
+
+
+	public void setScore(ArrayList<Integer> score) {
+		this.score = score;
+	}
+
+
+
+
+	public int getTopScore() {
+		return topScore;
+	}
+
+
+
+
+	public void setTopScore(int topScore) {
+		this.topScore = topScore;
 	}
 
 	

@@ -44,31 +44,36 @@ public class OpponentPlayer extends player {
 	
 	boolean hasPair()
 	{
-		int i = 0;
+
 		if(this.getPair() > 0 ) //If has a pair.
 		{
-			for(Card C : this.getHandCards())
+			
+			for(int x = 0; x < this.getHandCards().size(); x++)
 			{
-				if(C.getRank() != this.getPair()+1) // || C.getRank() != this.getThreeKind() + 1 || C.getRank() != this.getFourKind())
+				
+				if(this.getFourKind() > 0 && this.getHandCards().get(x).getRank() != (this.getFourKind() - 1))
 				{
-					this.getHandCards().remove(i);  //remove card if not part of pair.
-					i++;
+					this.getHandCards().remove(x);  //remove card if not part of pair.
+				    x = 0;
+					setOneCard(true);
+				}
+				
+				if(this.getThreeKind() > 0 && this.getHandCards().get(x).getRank() != (this.getThreeKind() - 1))
+				{
+					this.getHandCards().remove(x);  //remove card if not part of pair.
+					x = 0;
 					setTwoCards(true);
 				}
 				
-				else if( C.getRank() != this.getThreeKind() + 1)
+				if(this.getHandCards().get(x).getRank() != (this.getPair() - 1)) 
 				{
-					this.getHandCards().remove(i);  //remove card if not part of pair.
-					i++;
+					this.getHandCards().remove(x);  //remove card if not part of pair.
+					x = 0;
 					setThreeCards(true);
 				}
 				
-				else if(C.getRank() != this.getFourKind() + 1)
-				{
-					this.getHandCards().remove(i);  //remove card if not part of pair.
-					i++;
-					setFourCards(true);
-				}
+				
+			
 			
 			
 		}
@@ -111,11 +116,12 @@ public class OpponentPlayer extends player {
 		
 		if(highCardOnly && fourSuit) //If previous two are true then remove the card of different suit
 		{
-			for(Card C : this.getHandCards())
+			for(int x = 0; x < this.getHandCards().size(); x++)
 			{
-				if(C.getSuit() != suitVal)
+				if(this.getHandCards().get(x).getSuit() != suitVal)
 				{
 					this.getHandCards().remove(index);
+					x--;
 					setOneCard(true);
 				}
 				
@@ -145,13 +151,12 @@ public class OpponentPlayer extends player {
 			seq.add(C.getRank());
 		}
 		
-		
-		
-		if(seq.get(4) == seq.get(3) - 1)
+
+		if(seq.get(4) == seq.get(3) + 1)
 		{
-			if(seq.get(3) == seq.get(2) - 1)
+			if(seq.get(3) == seq.get(2) + 1)
 			{
-				if(seq.get(2) == seq.get(1) - 1)
+				if(seq.get(2) == seq.get(1) + 1)
 				{
 					this.getHandCards().remove(0);
 					setOneCard(true);
@@ -160,11 +165,11 @@ public class OpponentPlayer extends player {
 			}
 		}
 		
-		else if(seq.get(3) == seq.get(2) - 1)
+		else if(seq.get(3) == seq.get(2) + 1)
 		{
-			if(seq.get(2) == seq.get(1) - 1)
+			if(seq.get(2) == seq.get(1) + 1)
 			{
-				if(seq.get(1) == seq.get(0) - 1)
+				if(seq.get(1) == seq.get(0) + 1)
 				{
 					this.getHandCards().remove(4);
 					setOneCard(true);
@@ -195,17 +200,20 @@ public class OpponentPlayer extends player {
 	
 	boolean discardFour() // Discard other four cards if hand contains an Ace
 	{
-		int index = 0;
+
 		
 		if(checkAce(this) == true)
 		{
-			for(Card C: this.getHandCards())
+			
+			
+			for(int x = 0; x < this.getHandCards().size() ; x++)
 			{
-				if(C.getRank() != 12)
+				if(this.getHandCards().get(x).getRank() != 12)
 				{
-					this.getHandCards().remove(index);
+					this.getHandCards().remove(x);
+					x--;
 				}
-				index++;
+
 			}
 			setFourCards(true);
 			return true;

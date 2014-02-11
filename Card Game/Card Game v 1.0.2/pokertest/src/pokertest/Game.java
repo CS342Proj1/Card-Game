@@ -7,10 +7,13 @@ import java.util.ArrayList;
 
 public class Game {
 
+	private static Scanner scan;
+
+
 	public static void main(String[] args) {
 		
 		int numOfComputerPlayer = 1; //Initialize to 1 Computer player
-		Deck deck = new Deck();	//The deck used in the game
+		//Deck deck = new Deck();	//The deck used in the game
 				
  
 
@@ -19,7 +22,7 @@ public class Game {
 	   {
 		   //prompt user to choose the number of opponent players (1-3)
 		   System.out.println("Please enter the number of computer players:");
-		   Scanner scan = new Scanner(System.in);
+		   scan = new Scanner(System.in);
 		   numOfComputerPlayer = scan.nextInt();
 		
 	   	if(numOfComputerPlayer > 3 || numOfComputerPlayer < 1)
@@ -28,21 +31,25 @@ public class Game {
 	   	}
 	   	else
 	   	{
-	   		scan.close();
+
 	   		break;
 	   	}
+	   	
 	   }
 	   
-	   UserPlayer player1 = new UserPlayer();
+
+	    gamePlay(numOfComputerPlayer+1);
+/*	   UserPlayer player1 = new UserPlayer();
 	   OpponentPlayer player2 = new OpponentPlayer();
 	   OpponentPlayer player3 = new OpponentPlayer();
 	   OpponentPlayer player4 = new OpponentPlayer();
-	   
-	   Card c1 = new Card(0,0);
-	   Card c2 = new Card(0,0);
-	   Card c3 = new Card(1,3);
-	   Card c4 = new Card(2,3);
-	   Card c5 = new Card(3,3);
+
+	   Card c1 = new Card(0,4);
+	   Card c2 = new Card(1,4);
+	   Card c3 = new Card(1,7);
+	   Card c4 = new Card(2,7);
+	   Card c5 = new Card(3,7);
+
 	   
 	   UserPlayer testPlayer = new UserPlayer();
 	   
@@ -51,15 +58,15 @@ public class Game {
 	   testPlayer.getHandCards().add(c3);
 	   testPlayer.getHandCards().add(c4);
 	   testPlayer.getHandCards().add(c5);
+	*/   
 	   
+	//   List<player> players = new ArrayList<player>();
+	//   players.add(player1);
+	//   players.add(player2);
+	//   players.add(player3);
+	//   players.add(player4);
 	   
-	   List<player> players = new ArrayList<player>();
-	   players.add(player1);
-	   players.add(player2);
-	   players.add(player3);
-	   players.add(player4);
-	   
-	   dealCards(players, numOfComputerPlayer + 1, deck);
+	//   dealCards(players, numOfComputerPlayer + 1, deck);
 	 //  player1.printHand();
 	//   System.out.println("Has Ace: " + checkAce(player1));
 	//   HandEval(player1);
@@ -71,19 +78,207 @@ public class Game {
 	}
 	
 	
-	void gamePlay(ArrayList<player> players)
+	static void gamePlay(int numPlayers)
 	{
+			int draw;
+			Deck deck = new Deck();	//The deck used in the game
+			
+		   UserPlayer player1 = new UserPlayer();
+		   OpponentPlayer player2 = new OpponentPlayer();
+		   OpponentPlayer player3 = new OpponentPlayer();
+		   OpponentPlayer player4 = new OpponentPlayer();
+		
+		   
+		   ArrayList<player> players = new ArrayList<player>();
+		   players.add(player1);
+		   players.add(player2);
+		   players.add(player3);
+		   players.add(player4);
+		   
+		   dealCards(players, numPlayers, deck);
+		   
+		   player1.printHand();
+		   
+		  
+		   
+		   if(player1.checkAce() == true )
+		   {
+			   System.out.println("Since you have an ace you can discard up to 4 cards.");
+		   }
+		   
+		   
+		  draw =  player1.discard();
+		  
+		   for(int i = 0; i < draw; i++)
+		   {
+			   player1.getHandCards().add(deck.drawFromDeck());
+		   }
+		   
+		   player1.printHand();
+		   HandEval(player1);
+		   printValues(player1);
+		   
+		   
+		   for(int i = 1; i < numPlayers; i++)
+		   {
+			   System.out.println("");
+			   System.out.println("");
+			   printHand(players.get(i));
+			   HandEval(players.get(i));
+			   ((OpponentPlayer) players.get(i)).aiRunner();
+			   
+			   if(((OpponentPlayer) players.get(i)).isFourCards() == true)
+			   {
+				   System.out.println("Player " + (i+1) + " has discarded 4 cards.");
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+			   }
+			   else if(((OpponentPlayer) players.get(i)).isThreeCards() == true)
+			   {
+				   System.out.println("Player " + (i+1) + " has discarded 3 cards.");
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   
+			   }
+			   else if(((OpponentPlayer) players.get(i)).isTwoCards() == true)
+			   {
+				   System.out.println("Player " + (i+1) + " has discarded 2 cards.");
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+			   }
+			   else if(((OpponentPlayer) players.get(i)).isOneCard() == true)
+			   {
+				   System.out.println("Player " + (i+1) + " has discarded 1 card.");
+				   ((OpponentPlayer) players.get(i)).getHandCards().add(deck.drawFromDeck());
+			   }
+			   else
+			   {
+				   System.out.println("Player " + (i+1) + " has discarded 0 cards.");
+			   }
+			   ((OpponentPlayer) players.get(i)).setAllZero();
+			   System.out.println("Player " + (i+1) + "'s hand: ");
+			   printHand(players.get(i));
+			   HandEval(players.get(i));
+			   printValues(players.get(i));
+		   }
+		   
+		   
+		   
+		determineWinner(players);
+		
 		
 	}
-	
+	public static void determineWinner(ArrayList<player> players)
+	{
+		ArrayList<Integer> scores = new ArrayList<Integer>();
+		
+		for(player p : players)
+		{
+			p.getScore().add(p.getHighCard());
+			p.getScore().add(p.getPair());
+			p.getScore().add(p.getTwoPair());
+			p.getScore().add(p.getThreeKind());
+			p.getScore().add(p.getStraight());
+			p.getScore().add(p.getFlush());
+			p.getScore().add(p.getFullHouse());
+			p.getScore().add(p.getFourKind());
+			p.getScore().add(p.getStraightFlush());
+		}
+		
+	  
+      for(player p : players)
+      {
+    	  for(int i = 8 ; i >= 0 ; i--)
+    	  {
+    		  if(p.getScore().get(i) > 0)
+    		  {
+    			  p.setTopScore(i);
+    			  scores.add(p.getTopScore());
+    			  break;
+    		  }
+    	  }
+      }
+      
+      int max = Collections.max(scores);
+      
+      System.out.println("");
+      System.out.println("");
+      
+      if(Collections.frequency(scores, max) > 1) //There is a tie
+      {
+    	  
+      }
+      
+      else
+      {
+    	  if(scores.get(0) == max)
+    	  {
+    		  System.out.println("Player 1 wins!!!");
+    	  }
+    	  else if(scores.get(1) == max)
+    	  {
+    		  System.out.println("Player 2 wins!!!");
+    	  }
+    	  
+    	  else if(scores.get(2) == max)
+    	  {
+    		  System.out.println("Player 3 wins!!!");
+    	  }
+    	  
+    	  else if(scores.get(3) == max)
+    	  {
+    		  System.out.println("Player 4 wins!!!");
+    	  }
+    	  
+      }
+      
+      
+      
+     
+      
+    /*
+      
+      System.out.println("");
+      System.out.println("");
+      
+      if(score1 > score2 && score1 > score3 && score1 > score4) //player1 wins indefinitely
+      {
+    	  System.out.println("Player 1 wins!!!");
+      }
+      
+      else if(score2 > score1 && score2 > score3 && score2 > score4) //player2 wins indefinitely 
+      {
+    	  System.out.println("Player 2 wins!!!");
+      }
+      
+      else if(score3 > score1 && score3 > score2 && score3 > score4) //player3 wins indefinitely
+      {
+    	  System.out.println("Player 3 wins!!!");
+      }
+      
+      else if(score4 > score1 && score4 > score2 && score4 > score3) //player4 wins indefinitely
+      {
+    	  System.out.println("Player 4 wins!!!");
+      }
+      
+      else //there was a tie somewhere
+      {
+    	  System.out.println("tie");
+      }
+      */
+	}
 	
 	public static void dealCards(List<player> players, int numOfPlayers, Deck deck)
 	{	
-
+		System.out.println("The cards are being delt...");
 		int cardNumber;
 		int i;
 		Card C;
 		Object p;
+		
 		
 		for(cardNumber = 0; cardNumber < 5; cardNumber++)
 		{
@@ -100,8 +295,10 @@ public class Game {
 	
 	static void printHand(player p)
 	{
-		
-		System.out.print("The cards in your hand are: ");
+		Collections.sort(p.getHandCards(), new Comparator<Card>(){
+			public int compare(Card C1, Card C2) {
+					return C1.getRank() - C2.getRank();
+			}});
 		int i = 1;
 		
 		for(Card C : p.getHandCards())
@@ -130,7 +327,7 @@ public class Game {
 	
 	static void HandEval(player p)
 	{
-		System.out.println("Evaluating Hand: ");
+		//System.out.println("Evaluating Hand: ");
 		
 		highCard(p);
 		onePair(p);
@@ -142,6 +339,10 @@ public class Game {
 		fourKind(p);
 		straightFlush(p);
 		
+	}
+	
+	static void printValues(player p)
+	{
 		System.out.println("This hand's high card: " + p.getHighCard());
 		
 		if(p.getPair() > 0)
@@ -187,7 +388,7 @@ public class Game {
 					return C1.getRank() - C2.getRank();
 			}});
 		
-		p.setHighCard(evalHand.get(4).getRank()+1);
+		p.setHighCard(evalHand.get(evalHand.size()-1).getRank()+1);
 	}
 	
 	static void onePair(player p)
@@ -301,7 +502,7 @@ public class Game {
 			}
 
 
-			p.setStraight(straightVal-1);
+			p.setStraight(straightVal);
 
 	}
 	
