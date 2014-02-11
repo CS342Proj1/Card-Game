@@ -76,19 +76,13 @@ public class UserPlayer extends player {
 			   cardList.add(value-1);
 			   count++;
 		 }
-		
-		Collections.sort(cardList);
-			
 		 
 		 if(count <= 3 || (count == 4 && this.checkAce() == true))
 		 {
 		 for(int C : cardList)
 		 {
-			 if(C > 0 && C < 6)
-			 {
 			 this.getHandCards().remove(C-i);
 			 i++;
-			 }
 		 }
 		 
 		 }
