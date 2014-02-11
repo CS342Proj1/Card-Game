@@ -18,12 +18,10 @@ public class Deck {
 		{
 			for (int b=0; b<13; b++)
 			 {
-		
 			   cards.add(new Card(a,b));
-
 			 }
 		}
-
+// shuffle cards
 		for(int i = 0; i< 100; i++)
 		{
 			ind1 = generator.nextInt( cards.size() - 1 );
@@ -38,7 +36,7 @@ public class Deck {
 
 	public Card drawFromDeck()
 	{
-		return cards.remove(0);
+		return cards.remove(0);	//draw cards from the top
 	}
 
 	public int getTotalCards()

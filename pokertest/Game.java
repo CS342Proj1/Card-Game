@@ -1,10 +1,11 @@
 package pokertest;
-import java.util.Scanner; 
-import java.util.List;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*; 
 
 public class Game {
-
+/**************************	  Main function  **********************************/
 	public static void main(String[] args) {
 
 		int numOfComputerPlayer = 1; //Initialize to 1 Computer player
@@ -13,24 +14,21 @@ public class Game {
 		System.out.println("Welcome to Poker Game!");
 
 
-	   while(true)
+	   Scanner scanner = new Scanner(System.in);
+	while(true)
 	   {
 		   //prompt user to choose the number of opponent players (1-3)
 		   System.out.println("Please enter the number of computer players:");
-		   Scanner scan = new Scanner(System.in);
-		   numOfComputerPlayer = scan.nextInt();
+		   numOfComputerPlayer = scanner.nextInt();
 
-	   	if(numOfComputerPlayer > 3 || numOfComputerPlayer < 1)
-	   	{
+	   	if(numOfComputerPlayer > 3 || numOfComputerPlayer < 1){
 		   System.out.println("invalid number of players.");
 	   	}
-	   	else
-	   	{
-	   		scan.close();
+	   	else{
 	   		break;
 	   	}
 	   }
-	   
+	 
 	   
 	   UserPlayer player1 = new UserPlayer();
 	   OpponentPlayer player2 = new OpponentPlayer();
@@ -44,17 +42,19 @@ public class Game {
 	   players.add(player4);
 
 	   dealCards(players, numOfComputerPlayer + 1, deck);
+	  
 
 	   System.out.println("The cards are being delt to "+ (numOfComputerPlayer+1) +" players.");
 	   
 	   //this is for debuging
 	   for(int m = 0; m<numOfComputerPlayer+1; m++){
-		   printHand(players.get(m));
+		  // sortHandCards(players.get(m));
+		  printHand(players.get(m));
 	   }
 	   
 	   //Discard and Draw phase
-	   System.out.print("The cards in your hand are: ");
-	   printHand(player1);	//need to sort the order of cards
+	 
+	  player1.printHand();	//need to sort the order of cards
 
 	   System.out.println(" ");
 	   //check if there is a Ace in hand
@@ -70,49 +70,66 @@ public class Game {
 	   }
 	   
 	   //pump user to discard card
-	   int index[]={0,0,0,0},i=0;
+	  int[] idx={0,0,0,0}; 
+	   int i=0;
+	
+	   
 	  
-	   System.out.print("List the cards numbers you wish to discard (enter 0 for not discard): > ");
-	   
-	   
-	   
-	 //I have problem with read in the numbers
-	   Scanner scan = new Scanner(System.in);	
-		   while(scan.hasNext()){
-			   
-			   index[i] = scan.nextInt();
-			   discardNum--;
-			   if(discardNum < 0){
-		   		  	System.out.println("too many cards to discard.");
-		   		  	break;
-		   	  	}
-			   i++;
-		   }
-		   scan.close();
-		   
-		   for(int j = 0;j<i;j++){
-		   switch (index[j]) {
-		   	case 0: break;
-		   	case 1:	
-		   	case 2:
-			case 3:
-			case 4:
-			case 5:discardCard(player1, index[j]-1);break;
+	   InputStreamReader instr = new InputStreamReader(System.in);
+       BufferedReader stdin = new BufferedReader(instr);
+       StringTokenizer stok;
+       String value;
 
-			default:System.out.println("invalid input.");
-				break;
-		   }
-		   }
-	   	  
-	   	   //discardCard(player1, index-1);
-	   
-	   
+       try {
+
+// prompt the user and read in a line of input
+    	   System.out.print("List the cards numbers you wish to discard (enter 0 for not discard): ");
+           System.out.println();   
+           value = stdin.readLine();
+           System.out.println();
+       
+
+// use a StringTokenizer to extract each value entered from the input 
+// line, then convert each value to an int and store it to a int array
+
+           stok = new StringTokenizer(value);
+           while (stok.hasMoreTokens())
+           {
+               idx[i] = Integer.parseInt(stok.nextToken());
+               if(i>4){
+            	   break;
+               }
+               i++;
+           }
+       } catch (IOException ioe)
+       {
+           System.out.println(ioe);
+           System.exit(-1);
+       }
+	
+	  //for debugging
+	 // System.out.println("done scanning");
+       
+	  discardCards(player1, idx, i);
+	  //drawing new cards for player1
+	  Card newCard;
+	 // player1.printHand();
+	  if(player1.getHandCards().size()<5){
+	  for(int j = 0;j<i;j++){
+		  newCard = deck.drawFromDeck();
+		  player1.getHandCards().add(newCard);
+	  }
+	 
+	  //sortHandCards(player1);
+	  player1.printHand();
+	  }
+	  Players.HandEval(player1);
+		scanner.close();
 	}//end of main
 
-
+/**************************	  Functions  **********************************/
 	public static void dealCards(List<Players> players, int numOfPlayers, Deck deck)
 	{	
-
 		int cardNumber;
 		int i;
 		Card C;
@@ -129,8 +146,6 @@ public class Game {
 				((Players) p).getHandCards().add(C);
 			}
 		}
-
-
 	}
 
 	static void printHand(Players p)
@@ -150,7 +165,7 @@ public class Game {
 
 	static boolean hasAce(Players p){
 		for(Card C: p.getHandCards()){
-			if (C.getRank() == 13) {
+			if (C.getRank() == 12) {
 				return true;
 			}
 		}
@@ -158,29 +173,37 @@ public class Game {
 		return false;
 	}
 	
-	
-	static void discardCard(Players p, int n){
-		p.getHandCards().remove(n);
+	static void discardCards(Players p, int[] idx, int i){
+		int count = 0;   
+		  for(int j = 0;j<=i;j++){
+			 
+			   switch (idx[j]) {
+			   	case 0: break;
+			   	case 1:	
+			   	case 2:
+				case 3:
+				case 4:
+				case 5:
+					discardCard(p, (idx[j]-1-count));break;
+
+				default:System.out.println("invalid input.");
+					break;
+			   }//end of switch
+			   count++;
+		   }//end of for j */
+		  System.out.println("Done with discarding cards.");
 	}
+
+	//discard a individual card
+	static void discardCard(Players p, int n){
 	
-	/*static boolean fourOfAKind(Players p){
-		 for(Card c: p.getHandCards()){
-			 c.getRank() = 
-		 }
-	 }
-	 
-	 public boolean equalsSuit(Players p){
-		 return p.getHandCards().getSuit().equals(paramCard.getSuit());
-	 }
-	 
-	 public boolean next(Card paramCard){
-		 if(equalsSuit(paramCard)){
-			 return Math.abs(this.card-paramCard.card)==1;
-		 }
-		 else{
-			 return false;
-		 }
-	 }*/
+		if(hasAce(p) && n == 4){
+			System.out.println("You cannot discard Ace");
+		}
+		else{
+			p.getHandCards().remove(n);
+		}
+	}
 	 
 	
 }//end of class

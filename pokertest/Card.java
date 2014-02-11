@@ -6,6 +6,9 @@
  *
  */
 package pokertest;
+
+
+
 //import java.util.*;
 public class Card
 {
@@ -24,18 +27,14 @@ public class Card
         this.rank=rank;
 
         this.suit=suit;
-
+    
     }
-
- 
 
     public @Override String toString()
     {
 
           return ranks[rank] + suits[suit];
     }
-
- 
 
     public int getRank() {
 
@@ -57,6 +56,10 @@ public class Card
          return 1;  // black
     }
 
+	public void setColor(int color) {
+		this.color = color;
+	}
+    
 }//end of class
 
 	
