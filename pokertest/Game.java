@@ -112,18 +112,23 @@ public class Game {
        
 	  discardCards(player1, idx, i);
 	  //drawing new cards for player1
-	  Card newCard;
-	 // player1.printHand();
-	  if(player1.getHandCards().size()<5){
-	  for(int j = 0;j<i;j++){
-		  newCard = deck.drawFromDeck();
-		  player1.getHandCards().add(newCard);
-	  }
-	 
-	  //sortHandCards(player1);
+	  reDraw(player1, deck);
 	  player1.printHand();
-	  }
 	  Players.HandEval(player1);
+
+	  for(int m = 1; m<numOfComputerPlayer+1; m++){
+		  System.out.println("For computer " + m + ": ");
+		  ((OpponentPlayer) players.get(m)).aiRunner();
+		  reDraw(players.get(m), deck);
+		  
+		  printHand(players.get(m));
+		  Players.HandEval(players.get(m));
+		  System.out.println();
+	   }
+	  
+	  
+	  
+	  
 		scanner.close();
 	}//end of main
 
@@ -205,5 +210,14 @@ public class Game {
 		}
 	}
 	 
-	
+	static void reDraw(Players p, Deck deck){
+		int size = p.getHandCards().size();
+		Card newCard;
+		if(size<5){
+			  for(int j = 0;j<(5-size);j++){
+				  newCard = deck.drawFromDeck();
+				  p.getHandCards().add(newCard);
+			  }
+		}
+	}
 }//end of class
