@@ -39,41 +39,7 @@ public class Game {
 	   
 
 	    gamePlay(numOfComputerPlayer+1);
-/*	   UserPlayer player1 = new UserPlayer();
-	   OpponentPlayer player2 = new OpponentPlayer();
-	   OpponentPlayer player3 = new OpponentPlayer();
-	   OpponentPlayer player4 = new OpponentPlayer();
 
-	   Card c1 = new Card(0,4);
-	   Card c2 = new Card(1,4);
-	   Card c3 = new Card(1,7);
-	   Card c4 = new Card(2,7);
-	   Card c5 = new Card(3,7);
-
-	   
-	   UserPlayer testPlayer = new UserPlayer();
-	   
-	   testPlayer.getHandCards().add(c1);
-	   testPlayer.getHandCards().add(c2);
-	   testPlayer.getHandCards().add(c3);
-	   testPlayer.getHandCards().add(c4);
-	   testPlayer.getHandCards().add(c5);
-	*/   
-	   
-	//   List<player> players = new ArrayList<player>();
-	//   players.add(player1);
-	//   players.add(player2);
-	//   players.add(player3);
-	//   players.add(player4);
-	   
-	//   dealCards(players, numOfComputerPlayer + 1, deck);
-	 //  player1.printHand();
-	//   System.out.println("Has Ace: " + checkAce(player1));
-	//   HandEval(player1);
-	   
-	//   testPlayer.printHand();
-	//   System.out.println("Has Ace: " + checkAce(testPlayer));
-	//   HandEval(testPlayer);
 	   
 	}
 	
@@ -109,7 +75,7 @@ public class Game {
 		   
 		  draw =  player1.discard();
 		  
-		   for(int i = 0; i < draw; i++)
+		   for(int i = 0; i < draw -1; i++)
 		   {
 			   player1.getHandCards().add(deck.drawFromDeck());
 		   }
@@ -167,13 +133,19 @@ public class Game {
 		   
 		   
 		   
-		determineWinner(players);
+		determineWinner(players, numPlayers);
 		
 		
 	}
-	public static void determineWinner(ArrayList<player> players)
+	public static void determineWinner(ArrayList<player> players, int numPlayers)
 	{
 		ArrayList<Integer> scores = new ArrayList<Integer>();
+		
+		scores.add(0);
+		scores.add(0);
+		scores.add(0);
+		scores.add(0);
+		
 		
 		for(player p : players)
 		{
@@ -188,7 +160,7 @@ public class Game {
 			p.getScore().add(p.getStraightFlush());
 		}
 		
-	  
+	  int idx = 0;
       for(player p : players)
       {
     	  for(int i = 8 ; i >= 0 ; i--)
@@ -196,79 +168,56 @@ public class Game {
     		  if(p.getScore().get(i) > 0)
     		  {
     			  p.setTopScore(i);
-    			  scores.add(p.getTopScore());
+    			  scores.set(idx, (p.getTopScore()));
     			  break;
     		  }
     	  }
+    	  idx++;
       }
       
       int max = Collections.max(scores);
+      int topScore = max;
+      idx = 0;
+      
       
       System.out.println("");
       System.out.println("");
       
       if(Collections.frequency(scores, max) > 1) //There is a tie
       {
-    	  
+    	  for(player p : players)
+    	  {
+    		  if(p.getTopScore() >=  max)
+    		  {
+    			  topScore = p.getScore().get(max);
+    			  scores.set(idx, topScore);
+    			  max = topScore;
+    		  }
+    		idx++;
+    	  }
       }
       
-      else
-      {
-    	  if(scores.get(0) == max)
+      
+    	  if(scores.get(0) == topScore)
     	  {
-    		  System.out.println("Player 1 wins!!!");
+    		  System.out.println("Player 1 wins!!!"); 
     	  }
-    	  else if(scores.get(1) == max)
+    	  else if(scores.get(1) == topScore)
     	  {
     		  System.out.println("Player 2 wins!!!");
     	  }
     	  
-    	  else if(scores.get(2) == max)
+    	  else if(scores.get(2) == topScore)
     	  {
     		  System.out.println("Player 3 wins!!!");
     	  }
     	  
-    	  else if(scores.get(3) == max)
+    	  else if(scores.get(3) == topScore)
     	  {
     		  System.out.println("Player 4 wins!!!");
     	  }
     	  
-      }
       
-      
-      
-     
-      
-    /*
-      
-      System.out.println("");
-      System.out.println("");
-      
-      if(score1 > score2 && score1 > score3 && score1 > score4) //player1 wins indefinitely
-      {
-    	  System.out.println("Player 1 wins!!!");
-      }
-      
-      else if(score2 > score1 && score2 > score3 && score2 > score4) //player2 wins indefinitely 
-      {
-    	  System.out.println("Player 2 wins!!!");
-      }
-      
-      else if(score3 > score1 && score3 > score2 && score3 > score4) //player3 wins indefinitely
-      {
-    	  System.out.println("Player 3 wins!!!");
-      }
-      
-      else if(score4 > score1 && score4 > score2 && score4 > score3) //player4 wins indefinitely
-      {
-    	  System.out.println("Player 4 wins!!!");
-      }
-      
-      else //there was a tie somewhere
-      {
-    	  System.out.println("tie");
-      }
-      */
 	}
 	
 	public static void dealCards(List<player> players, int numOfPlayers, Deck deck)
@@ -327,7 +276,6 @@ public class Game {
 	
 	static void HandEval(player p)
 	{
-		//System.out.println("Evaluating Hand: ");
 		
 		highCard(p);
 		onePair(p);
